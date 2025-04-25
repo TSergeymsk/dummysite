@@ -542,9 +542,16 @@
             
             <div class="sudoku-container">
                 <div class="sudoku-controls">
+                    <label for="difficulty">Difficulty:</label>
+                    <select id="difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
                     <button class="sudoku-btn" id="new-game">New Game</button>
                     <button class="sudoku-btn" id="check-game">Check Solution</button>
                     <button class="sudoku-btn" id="solve-game">Solve</button>
+                    <button class="sudoku-btn" id="hint">Hint</button>
                 </div>
                 
                 <div class="sudoku-board" id="sudoku-board"></div>
@@ -789,6 +796,8 @@
             const checkGameBtn = document.getElementById('check-game');
             const solveGameBtn = document.getElementById('solve-game');
             const numberButtons = document.querySelectorAll('.number-btn');
+            const difficultySelect = document.getElementById('difficulty');
+            const hintBtn = document.getElementById('hint');
             
             let selectedCell = null;
             let sudokuBoard = Array(9).fill().map(() => Array(9).fill(0));
@@ -874,8 +883,19 @@
                 // Copy solution for checking
                 solution = sudokuBoard.map(row => [...row]);
                 
-                // Remove numbers to create the puzzle (adjust difficulty by changing the number of removed cells)
-                const cellsToRemove = 45 + Math.floor(Math.random() * 10); // 45-54 cells removed
+                let cellsToRemove;
+                switch (difficultySelect.value) {
+                    case 'easy':
+                        cellsToRemove = 30; // Fewer cells removed
+                        break;
+                    case 'medium':
+                        cellsToRemove = 45; // Default
+                        break;
+                    case 'hard':
+                        cellsToRemove = 60; // More cells removed
+                        break;
+                }
+                
                 let removed = 0;
                 
                 while (removed < cellsToRemove) {
@@ -1081,6 +1101,30 @@
                     updateBoard();
                 }
             }
+            
+            // Provide a hint by revealing a random hidden cell
+            function provideHint() {
+                const hiddenCells = [];
+                for (let row = 0; row < 9; row++) {
+                    for (let col = 0; col < 9; col++) {
+                        if (sudokuBoard[row][col] === 0) {
+                            hiddenCells.push({ row, col });
+                        }
+                    }
+                }
+            
+                if (hiddenCells.length > 0) {
+                    const randomCell = hiddenCells[Math.floor(Math.random() * hiddenCells.length)];
+                    const { row, col } = randomCell;
+                    sudokuBoard[row][col] = solution[row][col];
+                    updateBoard();
+                } else {
+                    alert('No more hints available!');
+                }
+            }
+            
+            // Event listener for the hint button
+            hintBtn.addEventListener('click', provideHint);
             
             // Event listeners
             newGameBtn.addEventListener('click', initializeBoard);
