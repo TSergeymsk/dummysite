@@ -286,6 +286,20 @@
             background-color: var(--secondary);
         }
         
+        .number-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .number-btn:hover {
+            background-color: var(--secondary);
+        }
+        
         /* Contact Form */
         .contact-form {
             display: grid;
@@ -1048,20 +1062,26 @@
             // Handle number button clicks
             function handleNumberInput(number) {
                 if (!selectedCell || !number) return;
-                
+            
                 const row = parseInt(selectedCell.dataset.row);
                 const col = parseInt(selectedCell.dataset.col);
-                
-                // Only allow changing non-fixed cells
+            
                 if (!fixedCells[row][col]) {
                     sudokuBoard[row][col] = number;
                     updateBoard();
-                    
-                    // Check if the input is correct
+            
                     if (number !== solution[row][col]) {
                         selectedCell.classList.add('error');
                     } else {
                         selectedCell.classList.remove('error');
+                    }
+            
+                    // Проверка заполненности доски
+                    if (isBoardComplete()) {
+                        const isCorrect = sudokuBoard.every((row, rowIndex) =>
+                            row.every((cell, colIndex) => cell === solution[rowIndex][colIndex])
+                        );
+                        showResultAnimation(isCorrect);
                     }
                 }
             }
@@ -1151,6 +1171,48 @@
             
             // Initialize the game
             initializeBoard();
+        }
+
+        // Проверка заполненности всех ячеек
+        function isBoardComplete() {
+            return sudokuBoard.every(row => row.every(cell => cell !== 0));
+        }
+
+        // Анимация результата
+        function showResultAnimation(isCorrect) {
+            const animationContainer = document.createElement('div');
+            animationContainer.style.position = 'fixed';
+            animationContainer.style.top = '0';
+            animationContainer.style.left = '0';
+            animationContainer.style.width = '100%';
+            animationContainer.style.height = '100%';
+            animationContainer.style.display = 'flex';
+            animationContainer.style.justifyContent = 'center';
+            animationContainer.style.alignItems = 'center';
+            animationContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            animationContainer.style.zIndex = '1000';
+        
+            if (isCorrect) {
+                animationContainer.innerHTML = `
+                    <div style="text-align: center; color: white;">
+                        <h1>🎉 Congratulations! 🎉</h1>
+                        <p>You solved the puzzle correctly!</p>
+                    </div>
+                `;
+            } else {
+                animationContainer.innerHTML = `
+                    <div style="text-align: center; color: white;">
+                        <h1>😢 Oops! 😢</h1>
+                        <p>There are some mistakes. Try again!</p>
+                    </div>
+                `;
+            }
+        
+            document.body.appendChild(animationContainer);
+        
+            setTimeout(() => {
+                document.body.removeChild(animationContainer);
+            }, 3000);
         }
     </script>
 </body>
