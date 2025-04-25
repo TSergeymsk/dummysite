@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>strelay.duckdns.org | White Noise Provider</title>
+    <style>
+        /* Global Styles */
+        :root {
+            --primary: #6a5acd;
+            --secondary: #9370db;
+            --light: #e6e6fa;
+            --dark: #483d8b;
+            --accent: #7b68ee;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .noise-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiIG9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==');
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        section {
+            margin-bottom: 4rem;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+        
+        /* White Noise Player */
+        .player-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+        
+        .noise-card {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border-radius: 10px;
+            padding: 1.5rem;
+            width: 220px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .noise-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .noise-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .noise-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .noise-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .play-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .play-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .play-btn.playing {
+            background-color: var(--accent);
+        }
+        
+        /* About Section */
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-image {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .about-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Sudoku Game */
+        .sudoku-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .sudoku-board {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 1px;
+            background-color: #333;
+            border: 2px solid #333;
+            margin-bottom: 1rem;
+        }
+        
+        .sudoku-cell {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .sudoku-cell.fixed {
+            background-color: #f0f0f0;
+        }
+        
+        .sudoku-cell.selected {
+            background-color: #d4e6f1;
+        }
+        
+        .sudoku-cell.highlighted {
+            background-color: #e8f4f8;
+        }
+        
+        .sudoku-cell.error {
+            color: #e74c3c;
+        }
+        
+        .sudoku-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .sudoku-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .sudoku-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        /* Contact Form */
+        .contact-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        
+        .footer-links li {
+            margin: 0 1rem;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--light);
+        }
+        
+        .copyright {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                margin-top: 1rem;
+            }
+            
+            .nav-links li {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .noise-card {
+                width: 100%;
+                max-width: 220px;
+            }
+        }
+        
+        /* Particle Animation */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="noise-overlay"></div>
+        <div class="particles" id="particles"></div>
+        <div class="container fade-in">
+            <div class="logo">strelay.duckdns.org</div>
+            <div class="tagline delay-1">Premium White Noise for Focus, Relaxation & Sleep</div>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="nav-container">
+            <div class="logo" style="font-size: 1.5rem; color: var(--dark);">strelay</div>
+            <ul class="nav-links">
+                <li><a href="#sounds">Sounds</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#game">Game</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section id="sounds" class="fade-in delay-1">
+            <h2>White Noise Collection</h2>
+            <p>Discover our premium selection of white noise sounds designed to help you focus, relax, or sleep better. At strelay.duckdns.org, we provide the perfect auditory backdrop for your needs.</p>
+            
+            <div class="player-container">
+                <div class="noise-card" data-sound="rain">
+                    <div class="noise-icon">🌧️</div>
+                    <div class="noise-title">Gentle Rain</div>
+                    <div class="noise-desc">Soothing rain for relaxation</div>
+                    <button class="play-btn">Play</button>
+                </div>
+                
+                <div class="noise-card" data-sound="ocean">
+                    <div class="noise-icon">🌊</div>
+                    <div class="noise-title">Ocean Waves</div>
+                    <div class="noise-desc">Calming ocean rhythm</div>
+                    <button class="play-btn">Play</button>
+                </div>
+                
+                <div class="noise-card" data-sound="forest">
+                    <div class="noise-icon">🌲</div>
+                    <div class="noise-title">Forest Ambience</div>
+                    <div class="noise-desc">Nature's peaceful sounds</div>
+                    <button class="play-btn">Play</button>
+                </div>
+                
+                <div class="noise-card" data-sound="whitenoise">
+                    <div class="noise-icon">📻</div>
+                    <div class="noise-title">Pure White Noise</div>
+                    <div class="noise-desc">Classic static for focus</div>
+                    <button class="play-btn">Play</button>
+                </div>
+                
+                <div class="noise-card" data-sound="coffee">
+                    <div class="noise-icon">☕</div>
+                    <div class="noise-title">Coffee Shop</div>
+                    <div class="noise-desc">Productive background buzz</div>
+                    <button class="play-btn">Play</button>
+                </div>
+                
+                <div class="noise-card" data-sound="fan">
+                    <div class="noise-icon">🌀</div>
+                    <div class="noise-title">Electric Fan</div>
+                    <div class="noise-desc">Steady cooling sound</div>
+                    <button class="play-btn">Play</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="about" class="fade-in delay-2">
+            <h2>About strelay.duckdns.org</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Welcome to strelay.duckdns.org, your premier destination for high-quality white noise and ambient sounds. Our name "strelay" combines "stream" and "relay" - representing our mission to stream relaxing sounds that relay peace to your mind.</p>
+                    <p>Founded in 2023, we've been helping thousands of users worldwide to improve their focus, enhance relaxation, and achieve better sleep through scientifically-proven sound therapy.</p>
+                    <p>Our sounds are carefully crafted and tested to provide the perfect balance of frequency and volume for optimal results. Whether you're working, studying, meditating, or sleeping, strelay.duckdns.org has the perfect soundscape for you.</p>
+                </div>
+                <div class="about-image">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNDAwIDMwMCI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiM2YTVhY2QiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIxNTAiIHI9IjgwIiBmaWxsPSIjOTM3MGRiIi8+PGNpcmNsZSBjeD0iMjAwIiBjeT0iMTUwIiByPSI2MCIgZmlsbD0iI2U2ZTZmYSIvPjxwYXRoIGQ9Ik0xNTAgMTUwIEE1MCA1MCAwIDAgMSAyNTAgMTUwIiBzdHJva2U9IiM0ODNkOGIiIHN0cm9rZS13aWR0aD0iMTAiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTUwIDE1MCBBNTAgNTAgMCAxIDEgMjUwIDE1MCIgc3Ryb2tlPSIjN2I2OGVlIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1kYXNoYXJyYXk9IjE1LDciLz48dGV4dCB4PSIyMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U1RSRUxBWTwvdGV4dD48dGV4dCB4PSIyMDAiIHk9IjE5MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+d2hpdGUgbm9pc2UgcHJvdmlkZXI8L3RleHQ+PC9zdmc+" alt="strelay logo">
+                </div>
+            </div>
+        </section>
+        
+        <section id="game" class="fade-in delay-3">
+            <h2>Relaxing Sudoku</h2>
+            <p>Take a break with our soothing Sudoku game. Perfect for clearing your mind while enjoying our white noise sounds from strelay.duckdns.org.</p>
+            
+            <div class="sudoku-container">
+                <div class="sudoku-controls">
+                    <button class="sudoku-btn" id="new-game">New Game</button>
+                    <button class="sudoku-btn" id="check-game">Check Solution</button>
+                    <button class="sudoku-btn" id="solve-game">Solve</button>
+                </div>
+                
+                <div class="sudoku-board" id="sudoku-board"></div>
+                
+                <div class="number-selector">
+                    <p>Select a number:</p>
+                    <div class="number-buttons">
+                        <button class="number-btn" data-number="1">1</button>
+                        <button class="number-btn" data-number="2">2</button>
+                        <button class="number-btn" data-number="3">3</button>
+                        <button class="number-btn" data-number="4">4</button>
+                        <button class="number-btn" data-number="5">5</button>
+                        <button class="number-btn" data-number="6">6</button>
+                        <button class="number-btn" data-number="7">7</button>
+                        <button class="number-btn" data-number="8">8</button>
+                        <button class="number-btn" data-number="9">9</button>
+                        <button class="number-btn" data-number="0">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="contact" class="fade-in">
+            <h2>Contact Us</h2>
+            <p>Have questions or suggestions for strelay.duckdns.org? We'd love to hear from you!</p>
+            
+            <form class="contact-form" id="contact-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                
+                <div class="form-group full-width" style="text-align: center;">
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </div>
+            </form>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="logo">strelay.duckdns.org</div>
+            <ul class="footer-links">
+                <li><a href="#sounds">Sounds</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#game">Game</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+            </ul>
+            <div class="copyright">© 2023 White Noise Provider. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        // Audio Player Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create audio context
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const audioContext = new AudioContext();
+            let currentSound = null;
+            let currentSource = null;
+            
+            // Sound presets
+            const soundPresets = {
+                rain: { type: 'noise', color: 'brown', frequency: 500, modulation: 0.2 },
+                ocean: { type: 'noise', color: 'pink', frequency: 300, modulation: 0.3 },
+                forest: { type: 'noise', color: 'green', frequency: 1000, modulation: 0.4 },
+                whitenoise: { type: 'noise', color: 'white', frequency: 1000, modulation: 0 },
+                coffee: { type: 'noise', color: 'brown', frequency: 800, modulation: 0.5 },
+                fan: { type: 'noise', color: 'pink', frequency: 600, modulation: 0.1 }
+            };
+            
+            // Play button functionality
+            document.querySelectorAll('.play-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const card = this.closest('.noise-card');
+                    const soundName = card.dataset.sound;
+                    
+                    // Stop any currently playing sound
+                    if (currentSource) {
+                        currentSource.stop();
+                        document.querySelectorAll('.play-btn').forEach(btn => {
+                            btn.textContent = 'Play';
+                            btn.classList.remove('playing');
+                        });
+                    }
+                    
+                    // If clicking the same sound, just stop it
+                    if (currentSound === soundName) {
+                        currentSound = null;
+                        currentSource = null;
+                        return;
+                    }
+                    
+                    // Play the selected sound
+                    currentSound = soundName;
+                    this.textContent = 'Stop';
+                    this.classList.add('playing');
+                    
+                    playSound(soundPresets[soundName]);
+                });
+            });
+            
+            // Function to generate and play noise
+            function playSound(preset) {
+                const bufferSize = 2 * audioContext.sampleRate;
+                const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                
+                // Generate noise based on type
+                if (preset.type === 'noise') {
+                    let lastOut = 0;
+                    for (let i = 0; i < bufferSize; i++) {
+                        let white = Math.random() * 2 - 1;
+                        
+                        // Apply color filter
+                        switch(preset.color) {
+                            case 'brown':
+                                lastOut = (lastOut + (0.02 * white)) / 1.02;
+                                output[i] = lastOut * 3.5;
+                                break;
+                            case 'pink':
+                                lastOut = 0.99886 * lastOut + white * 0.0555179;
+                                output[i] = lastOut * 0.75;
+                                break;
+                            case 'green':
+                                lastOut = 0.999 * lastOut + white * 0.01;
+                                output[i] = lastOut * 2;
+                                break;
+                            default: // white
+                                output[i] = white * 0.2;
+                        }
+                        
+                        // Add modulation for natural variation
+                        if (preset.modulation > 0) {
+                            const mod = Math.sin(i / (audioContext.sampleRate / (preset.frequency * 0.1))) * preset.modulation;
+                            output[i] = output[i] * (1 + mod);
+                        }
+                    }
+                }
+                
+                // Create and configure source
+                currentSource = audioContext.createBufferSource();
+                currentSource.buffer = noiseBuffer;
+                currentSource.loop = true;
+                
+                // Create filter for tone control
+                const filter = audioContext.createBiquadFilter();
+                filter.type = "bandpass";
+                filter.frequency.value = preset.frequency;
+                filter.Q.value = 1;
+                
+                // Connect nodes
+                currentSource.connect(filter);
+                filter.connect(audioContext.destination);
+                
+                // Start playback
+                currentSource.start();
+            }
+            
+            // Resume audio context on interaction
+            document.body.addEventListener('click', function() {
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+            }, { once: true });
+            
+            // Particle animation
+            createParticles();
+            
+            // Sudoku Game
+            setupSudoku();
+            
+            // Form submission
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Thank you for your message! We at strelay.duckdns.org will get back to you soon.');
+                this.reset();
+            });
+        });
+        
+        // Particle Animation
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 5 + 2;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 10 + 10;
+                const opacity = Math.random() * 0.5 + 0.1;
+                
+                // Apply styles
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.opacity = opacity;
+                particle.style.animation = `float ${duration}s linear ${delay}s infinite`;
+                
+                // Add to container
+                particlesContainer.appendChild(particle);
+            }
+            
+            // Add CSS animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes float {
+                    0% { transform: translateY(0) translateX(0); opacity: ${Math.random() * 0.5 + 0.1}; }
+                    50% { transform: translateY(-100px) translateX(${Math.random() > 0.5 ? '-' : ''}50px); opacity: ${Math.random() * 0.3 + 0.1}; }
+                    100% { transform: translateY(-200px) translateX(0); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Sudoku Game
+        function setupSudoku() {
+            const board = document.getElementById('sudoku-board');
+            const newGameBtn = document.getElementById('new-game');
+            const checkGameBtn = document.getElementById('check-game');
+            const solveGameBtn = document.getElementById('solve-game');
+            const numberButtons = document.querySelectorAll('.number-btn');
+            
+            let selectedCell = null;
+            let sudokuBoard = Array(9).fill().map(() => Array(9).fill(0));
+            let solution = Array(9).fill().map(() => Array(9).fill(0));
+            let fixedCells = Array(9).fill().map(() => Array(9).fill(false));
+            
+            // Initialize board
+            function initializeBoard() {
+                board.innerHTML = '';
+                
+                for (let row = 0; row < 9; row++) {
+                    for (let col = 0; col < 9; col++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'sudoku-cell';
+                        cell.dataset.row = row;
+                        cell.dataset.col = col;
+                        
+                        // Add thicker borders for 3x3 blocks
+                        if (row % 3 === 2 && row !== 8) {
+                            cell.style.borderBottom = '2px solid #333';
+                        }
+                        if (col % 3 === 2 && col !== 8) {
+                            cell.style.borderRight = '2px solid #333';
+                        }
+                        
+                        cell.addEventListener('click', () => selectCell(cell, row, col));
+                        board.appendChild(cell);
+                    }
+                }
+                
+                generateNewGame();
+            }
+            
+            // Select cell
+            function selectCell(cell, row, col) {
+                // Deselect previous cell
+                if (selectedCell) {
+                    selectedCell.classList.remove('selected');
+                    highlightRelatedCells(false);
+                }
+                
+                // Select new cell if it's not fixed
+                if (!fixedCells[row][col]) {
+                    selectedCell = cell;
+                    selectedCell.classList.add('selected');
+                    highlightRelatedCells(true);
+                }
+            }
+            
+            // Highlight related cells (same row, column, and 3x3 box)
+            function highlightRelatedCells(highlight) {
+                if (!selectedCell) return;
+                
+                const row = parseInt(selectedCell.dataset.row);
+                const col = parseInt(selectedCell.dataset.col);
+                
+                // Determine the top-left corner of the 3x3 box
+                const boxRow = Math.floor(row / 3) * 3;
+                const boxCol = Math.floor(col / 3) * 3;
+                
+                // Highlight all cells in the same row, column, and box
+                document.querySelectorAll('.sudoku-cell').forEach(cell => {
+                    const cellRow = parseInt(cell.dataset.row);
+                    const cellCol = parseInt(cell.dataset.col);
+                    
+                    if (cellRow === row || cellCol === col || 
+                        (cellRow >= boxRow && cellRow < boxRow + 3 && 
+                         cellCol >= boxCol && cellCol < boxCol + 3)) {
+                        cell.classList.toggle('highlighted', highlight);
+                    }
+                });
+            }
+            
+            // Generate a new game
+            function generateNewGame() {
+                // Reset board
+                sudokuBoard = Array(9).fill().map(() => Array(9).fill(0));
+                fixedCells = Array(9).fill().map(() => Array(9).fill(false));
+                
+                // Generate a solved board
+                generateSolution();
+                
+                // Copy solution for checking
+                solution = sudokuBoard.map(row => [...row]);
+                
+                // Remove numbers to create the puzzle (adjust difficulty by changing the number of removed cells)
+                const cellsToRemove = 45 + Math.floor(Math.random() * 10); // 45-54 cells removed
+                let removed = 0;
+                
+                while (removed < cellsToRemove) {
+                    const row = Math.floor(Math.random() * 9);
+                    const col = Math.floor(Math.random() * 9);
+                    
+                    if (sudokuBoard[row][col] !== 0) {
+                        sudokuBoard[row][col] = 0;
+                        removed++;
+                    }
+                }
+                
+                // Mark remaining numbers as fixed
+                for (let row = 0; row < 9; row++) {
+                    for (let col = 0; col < 9; col++) {
+                        if (sudokuBoard[row][col] !== 0) {
+                            fixedCells[row][col] = true;
+                        }
+                    }
+                }
+                
+                // Update the UI
+                updateBoard();
+            }
+            
+            // Generate a solved Sudoku board
+            function generateSolution() {
+                // Fill diagonal 3x3 boxes first (they are independent of each other)
+                fillDiagonalBoxes();
+                
+                // Then solve the rest of the board
+                solveSudoku(0, 0);
+            }
+            
+            // Fill the diagonal 3x3 boxes
+            function fillDiagonalBoxes() {
+                for (let box = 0; box < 9; box += 3) {
+                    fillBox(box, box);
+                }
+            }
+            
+            // Fill a 3x3 box with random numbers
+            function fillBox(row, col) {
+                const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                shuffleArray(nums);
+                
+                let index = 0;
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        sudokuBoard[row + i][col + j] = nums[index++];
+                    }
+                }
+            }
+            
+            // Shuffle an array
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+            
+            // Recursive function to solve Sudoku
+            function solveSudoku(row, col) {
+                if (row === 9) {
+                    return true; // Reached the end
+                }
+                
+                if (col === 9) {
+                    return solveSudoku(row + 1, 0); // Move to next row
+                }
+                
+                // Skip already filled cells
+                if (sudokuBoard[row][col] !== 0) {
+                    return solveSudoku(row, col + 1);
+                }
+                
+                // Try numbers 1-9
+                const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                shuffleArray(nums); // Randomize for variety
+                
+                for (const num of nums) {
+                    if (isValidPlacement(row, col, num)) {
+                        sudokuBoard[row][col] = num;
+                        
+                        if (solveSudoku(row, col + 1)) {
+                            return true;
+                        }
+                        
+                        sudokuBoard[row][col] = 0; // Backtrack
+                    }
+                }
+                
+                return false; // Trigger backtracking
+            }
+            
+            // Check if a number can be placed in a cell
+            function isValidPlacement(row, col, num) {
+                // Check row
+                for (let c = 0; c < 9; c++) {
+                    if (sudokuBoard[row][c] === num) return false;
+                }
+                
+                // Check column
+                for (let r = 0; r < 9; r++) {
+                    if (sudokuBoard[r][col] === num) return false;
+                }
+                
+                // Check 3x3 box
+                const boxRow = Math.floor(row / 3) * 3;
+                const boxCol = Math.floor(col / 3) * 3;
+                
+                for (let r = boxRow; r < boxRow + 3; r++) {
+                    for (let c = boxCol; c < boxCol + 3; c++) {
+                        if (sudokuBoard[r][c] === num) return false;
+                    }
+                }
+                
+                return true;
+            }
+            
+            // Update the UI board
+            function updateBoard() {
+                document.querySelectorAll('.sudoku-cell').forEach(cell => {
+                    const row = parseInt(cell.dataset.row);
+                    const col = parseInt(cell.dataset.col);
+                    const value = sudokuBoard[row][col];
+                    
+                    cell.textContent = value === 0 ? '' : value;
+                    cell.className = 'sudoku-cell';
+                    
+                    if (fixedCells[row][col]) {
+                        cell.classList.add('fixed');
+                    }
+                    
+                    // Reapply selected class if this is the selected cell
+                    if (selectedCell && 
+                        parseInt(selectedCell.dataset.row) === row && 
+                        parseInt(selectedCell.dataset.col) === col) {
+                        cell.classList.add('selected');
+                    }
+                });
+                
+                // Re-highlight related cells if needed
+                if (selectedCell) {
+                    highlightRelatedCells(true);
+                }
+            }
+            
+            // Handle number button clicks
+            function handleNumberInput(number) {
+                if (!selectedCell || !number) return;
+                
+                const row = parseInt(selectedCell.dataset.row);
+                const col = parseInt(selectedCell.dataset.col);
+                
+                // Only allow changing non-fixed cells
+                if (!fixedCells[row][col]) {
+                    sudokuBoard[row][col] = number;
+                    updateBoard();
+                    
+                    // Check if the input is correct
+                    if (number !== solution[row][col]) {
+                        selectedCell.classList.add('error');
+                    } else {
+                        selectedCell.classList.remove('error');
+                    }
+                }
+            }
+            
+            // Check the current solution
+            function checkSolution() {
+                let isCorrect = true;
+                
+                for (let row = 0; row < 9; row++) {
+                    for (let col = 0; col < 9; col++) {
+                        const cell = document.querySelector(`.sudoku-cell[data-row="${row}"][data-col="${col}"]`);
+                        
+                        if (sudokuBoard[row][col] !== 0) {
+                            if (sudokuBoard[row][col] !== solution[row][col]) {
+                                cell.classList.add('error');
+                                isCorrect = false;
+                            } else {
+                                cell.classList.remove('error');
+                            }
+                        } else {
+                            isCorrect = false;
+                        }
+                    }
+                }
+                
+                if (isCorrect) {
+                    alert('Congratulations! You solved the puzzle correctly!');
+                } else {
+                    alert('There are some incorrect numbers or empty cells. Keep trying!');
+                }
+            }
+            
+            // Solve the puzzle
+            function solvePuzzle() {
+                if (confirm('Are you sure you want to see the solution?')) {
+                    sudokuBoard = solution.map(row => [...row]);
+                    updateBoard();
+                }
+            }
+            
+            // Event listeners
+            newGameBtn.addEventListener('click', initializeBoard);
+            checkGameBtn.addEventListener('click', checkSolution);
+            solveGameBtn.addEventListener('click', solvePuzzle);
+            
+            numberButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const number = parseInt(button.dataset.number);
+                    handleNumberInput(number);
+                });
+            });
+            
+            // Keyboard support
+            document.addEventListener('keydown', (e) => {
+                if (!selectedCell) return;
+                
+                if (e.key >= '1' && e.key <= '9') {
+                    handleNumberInput(parseInt(e.key));
+                } else if (e.key === '0' || e.key === 'Backspace' || e.key === 'Delete') {
+                    handleNumberInput(0);
+                }
+            });
+            
+            // Initialize the game
+            initializeBoard();
+        }
+    </script>
+</body>
+</html>
